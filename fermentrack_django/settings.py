@@ -59,6 +59,8 @@ if sys.platform == "darwin":
     if 'mod_wsgi' in installed_packages:
         INSTALLED_APPS += 'mod_wsgi.server', # Used for the macOS setup
 
+# Find out if we are running under DOCKER (env DOCKER=1) and disable warnings for GIT/Python, update should be done via docker image upgrade
+IS_DOCKER = os.getenv("DOCKER", "0")
 
 # if ENABLE_SENTRY:
 #     import raven
@@ -212,7 +214,6 @@ CONSTANCE_CONFIG = {
     'GRAPH_GRAVITY_TEMP_COLOR': ("#280003", 'What color do you want the gravity sensor temperature line on the graph?', str),
     'SQLITE_OK_DJANGO_2': (False, 'Has the Django 2.0+ SQLite migration been run?',
                                    bool),
-
 }
 
 CONSTANCE_CONFIG_FIELDSETS = {
@@ -224,7 +225,7 @@ CONSTANCE_CONFIG_FIELDSETS = {
                      'GRAPH_GRAVITY_TEMP_COLOR'),
 
     'Internal Items': ('FIRMWARE_LIST_LAST_REFRESHED', 'LAST_GIT_CHECK', 'USER_HAS_COMPLETED_CONFIGURATION',
-                       'SQLITE_OK_DJANGO_2'),
+                       'SQLITE_OK_DJANGO_2' ),
 
     'Advanced Options': ('ALLOW_GIT_BRANCH_SWITCHING','GIT_UPDATE_TYPE')
 }

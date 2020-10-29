@@ -27,7 +27,7 @@ from django.contrib.auth.models import User
 
 
 def error_notifications(request):
-    if config.GIT_UPDATE_TYPE != "none":
+    if settings.IS_DOCKER == "0" and config.GIT_UPDATE_TYPE != "none":
         # Check the git status at least every 6 hours
         now_time = timezone.now()
         try:
@@ -65,7 +65,7 @@ def error_notifications(request):
                                      'Click <a href="/upgrade">here</a> to update to the correct branch.')
 
     # TODO - Remove this after June 1st release
-    if sys.version_info < (3, 7):
+    if settings.IS_DOCKER == "0" and sys.version_info < (3, 7):
         messages.error(request, "You are currently running Python {}.{} ".format(sys.version_info.major, sys.version_info.minor) +
                          "which will no longer be supported by Fermentrack with the next release (due <b>June 5th</b>). " +
                          'To learn more (including how to fix this) read <a href="https://github.com/thorrak/fermentrack/issues/463">this issue on GitHub</a>.')
@@ -660,8 +660,8 @@ def site_settings(request):
             pass
     else:
         form = setup_forms.GuidedSetupConfigForm()
-
-    context = {'form': form, 'completed_config': config.USER_HAS_COMPLETED_CONFIGURATION}
+    
+    context = {'form': form, 'completed_config': config.USER_HAS_COMPLETED_CONFIGURATION, 'is_docker': settings.IS_DOCKER }
     context.update(external_push_list(request, context_only=True))  # Add in the "external push" object list
 
     return render(request, template_name='site_config.html', context=context)

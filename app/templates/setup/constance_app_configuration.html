@@ -22,7 +22,9 @@
         {% form_generic form.temperature_format %}
         {% form_generic form.preferred_timezone %}
         {% form_generic form.enable_gravity_support %}
+        {% if is_docker == '0' %}        
         {% form_generic form.update_preference %}
+        {% endif %}
         {% form_generic form.enable_sentry_support %}
         <input type="submit" value="Save Configuration" class="btn btn-primary"/>
     </div>
